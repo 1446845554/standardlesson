@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="SlDept" parent="global:SlDept">
+      <PropertyDef name="detpId">
+        <Property name="label">部门编号</Property>
+        <Property name="readOnly">true</Property>
+      </PropertyDef>
+      <PropertyDef name="detpName">
+        <Property name="label">部门名称</Property>
+      </PropertyDef>
+      <Reference name="slDeptSet">
+        <Property name="dataType">[SELF]</Property>
+        <Property name="dataProvider">deptService#getDeptByParentId</Property>
+        <Property name="parameter">$${this.deptId}</Property>
+      </Reference>
+      <Reference name="slEmployeeSet">
+        <Property name="dataType">[SlEmployee]</Property>
+        <Property name="dataProvider">deptService#getEmployeeByDeptId</Property>
+        <Property name="pageSize">15</Property>
+        <Property name="parameter">$${this.deptId}</Property>
+      </Reference>
+    </DataType>
+    <DataType name="SlEmployee" parent="global:SlEmployee">
+      <PropertyDef name="employeeCode">
+        <Property name="label">员工号</Property>
+      </PropertyDef>
+      <PropertyDef name="employeeName">
+        <Property name="label">姓名</Property>
+      </PropertyDef>
+      <PropertyDef name="email">
+        <Property name="label">电子邮件</Property>
+      </PropertyDef>
+      <PropertyDef name="phone">
+        <Property name="label">座机</Property>
+      </PropertyDef>
+      <PropertyDef name="mobile">
+        <Property name="label">移动电话</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="datasetDept">
+      <Property name="dataType">[SlDept]</Property>
+      <Property name="dataProvider">deptService#getTopDept</Property>
+    </DataSet>
+    <SplitPanel>
+      <Property name="position">300</Property>
+      <MainControl>
+        <Container>
+          <FieldSet>
+            <Property name="caption">部门信息</Property>
+            <Property name="height">200</Property>
+            <Buttons/>
+            <Children>
+              <AutoForm id="autoformDept">
+                <Property name="dataSet">datasetDept</Property>
+                <Property name="dataPath">!CURRENT_DEPT</Property>
+                <Property name="labelSeparator">:</Property>
+                <AutoFormElement>
+                  <Property name="name">deptId</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">deptName</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+          </FieldSet>
+          <DataPilot id="datapilotEmployee">
+            <Property name="dataSet">datasetDept</Property>
+            <Property name="dataPath">!CURRENT_DEPT.slEmployeeSet</Property>
+            <Property name="itemCodes">pages,pageSize</Property>
+          </DataPilot>
+          <DataGrid id="datagridEmployee">
+            <Property name="dataSet">datasetDept</Property>
+            <Property name="dataPath">!CURRENT_DEPT.slEmployeeSet</Property>
+            <DataColumn name="employeeCode">
+              <Property name="property">employeeCode</Property>
+            </DataColumn>
+            <DataColumn name="employeeName">
+              <Property name="property">employeeName</Property>
+            </DataColumn>
+            <DataColumn name="email">
+              <Property name="property">email</Property>
+            </DataColumn>
+            <DataColumn name="phone">
+              <Property name="property">phone</Property>
+            </DataColumn>
+            <DataColumn name="mobile">
+              <Property name="property">mobile</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </MainControl>
+      <SideControl>
+        <DataTree id="datatreeDept">
+          <ClientEvent name="onContextMenu" signature="self,arg,menuOper">menuOper.show({&#xD;
+     position:{&#xD;
+         left:arg.event.pageX,&#xD;
+         top:arg.event.pageY&#xD;
+     }&#xD;
+});</ClientEvent>
+          <Property name="dataSet">datasetDept</Property>
+          <Property name="currentNodeDataPath">CURRENT_DEPT</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="labelProperty">deptName</Property>
+              <Property name="name">dept</Property>
+              <Property name="childrenProperty">slDeptSet</Property>
+              <Property name="recursive">true</Property>
+            </BindingConfig>
+          </BindingConfigs>
+        </DataTree>
+      </SideControl>
+    </SplitPanel>
+  </View>
+</ViewConfig>

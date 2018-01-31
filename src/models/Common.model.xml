@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Model>
+  <DataType name="SlCompany">
+    <Property name="matchType">com.bstek.dorado.sample.standardlesson.entity.SlCompany</Property>
+    <PropertyDef name="companyId">
+      <Property name="dataType">int</Property>
+      <Property name="label">企业Id</Property>
+    </PropertyDef>
+    <PropertyDef name="companyName">
+      <Property></Property>
+      <Property name="label">企业简称</Property>
+    </PropertyDef>
+    <PropertyDef name="fullName">
+      <Property></Property>
+      <Property name="label">企业全称</Property>
+    </PropertyDef>
+    <PropertyDef name="web">
+      <Property></Property>
+      <Property name="label">企业官网</Property>
+    </PropertyDef>
+    <PropertyDef name="address">
+      <Property></Property>
+      <Property name="label">企业地址</Property>
+    </PropertyDef>
+    <PropertyDef name="postcode">
+      <Property></Property>
+      <Property name="label">邮政编码</Property>
+    </PropertyDef>
+    <PropertyDef name="phone">
+      <Property></Property>
+      <Property name="label">企业热线</Property>
+    </PropertyDef>
+    <PropertyDef name="email">
+      <Property></Property>
+      <Property name="label">电子邮件</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="SlEmployee">
+    <Property name="matchType">com.bstek.dorado.sample.standardlesson.entity.SlEmployee</Property>
+    <PropertyDef name="employeeId">
+      <Property name="dataType">int</Property>
+      <Property name="label">员工Id</Property>
+    </PropertyDef>
+    <PropertyDef name="employeeCode">
+      <Property></Property>
+      <Property name="label">员工编号</Property>
+    </PropertyDef>
+    <PropertyDef name="userName">
+      <Property></Property>
+      <Property name="label">系统Id</Property>
+    </PropertyDef>
+    <PropertyDef name="employeeName">
+      <Property></Property>
+      <Property name="label">员工姓名</Property>
+    </PropertyDef>
+    <PropertyDef name="sex">
+      <Property name="dataType">boolean</Property>
+      <Property name="label">性别</Property>
+    </PropertyDef>
+    <PropertyDef name="birthday">
+      <Property name="dataType">Date</Property>
+      <Property name="label">生日</Property>
+    </PropertyDef>
+    <PropertyDef name="married">
+      <Property name="dataType">boolean</Property>
+      <Property name="label">婚否</Property>
+    </PropertyDef>
+    <PropertyDef name="salary">
+      <Property name="dataType">BigDecimal</Property>
+      <Property name="label">薪水</Property>
+    </PropertyDef>
+    <PropertyDef name="degree">
+      <Property></Property>
+      <Property name="label">学历</Property>
+    </PropertyDef>
+    <PropertyDef name="email">
+      <Property></Property>
+      <Property name="label">电子邮件</Property>
+    </PropertyDef>
+    <PropertyDef name="web">
+      <Property></Property>
+      <Property name="label">个人主页</Property>
+    </PropertyDef>
+    <PropertyDef name="cmnt">
+      <Property></Property>
+      <Property name="label">备注</Property>
+    </PropertyDef>
+    <PropertyDef name="image">
+      <Property></Property>
+      <Property name="label">照片</Property>
+    </PropertyDef>
+    <PropertyDef name="password">
+      <Property></Property>
+      <Property name="label">密码</Property>
+    </PropertyDef>
+    <PropertyDef name="animal">
+      <Property></Property>
+      <Property name="label">属相</Property>
+    </PropertyDef>
+    <PropertyDef name="phone">
+      <Property></Property>
+      <Property name="label">座机</Property>
+    </PropertyDef>
+    <PropertyDef name="mobile">
+      <Property></Property>
+      <Property name="label">移动电话</Property>
+    </PropertyDef>
+    <PropertyDef name="position">
+      <Property></Property>
+      <Property name="label">职务</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="SlMessage">
+    <Property name="matchType">com.bstek.dorado.sample.standardlesson.entity.SlMessage</Property>
+    <PropertyDef name="messageId">
+      <Property name="dataType">int</Property>
+      <Property name="label">消息Id</Property>
+    </PropertyDef>
+    <PropertyDef name="receiver">
+      <Property></Property>
+      <Property name="label">接收者</Property>
+    </PropertyDef>
+    <PropertyDef name="receiverMail">
+      <Property></Property>
+      <Property name="label">接收邮箱</Property>
+    </PropertyDef>
+    <PropertyDef name="senderMail">
+      <Property></Property>
+      <Property name="label">发送邮箱</Property>
+    </PropertyDef>
+    <PropertyDef name="sendDate">
+      <Property name="dataType">Date</Property>
+      <Property name="label">发送日期</Property>
+    </PropertyDef>
+    <PropertyDef name="content">
+      <Property></Property>
+      <Property name="label">内容</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="SlDept">
+    <Property name="matchType">com.bstek.dorado.sample.standardlesson.entity.SlDept</Property>
+    <PropertyDef name="deptId">
+      <Property name="dataType">int</Property>
+      <Property name="label">部门Id</Property>
+    </PropertyDef>
+    <PropertyDef name="deptName">
+      <Property></Property>
+      <Property name="label">部门名称</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="SlMenu">
+    <Property name="matchType">com.bstek.dorado.sample.standardlesson.entity.SlMenu</Property>
+    <PropertyDef name="menuId">
+      <Property name="dataType">int</Property>
+      <Property name="label">菜单Id</Property>
+    </PropertyDef>
+    <PropertyDef name="menuName">
+      <Property/>
+      <Property name="label">菜单名称</Property>
+    </PropertyDef>
+    <PropertyDef name="remarks">
+      <Property/>
+      <Property name="label">备注</Property>
+    </PropertyDef>
+    <PropertyDef name="icon">
+      <Property/>
+      <Property name="label">图标</Property>
+    </PropertyDef>
+    <PropertyDef name="showOrder">
+      <Property/>
+      <Property name="label">显示顺序</Property>
+    </PropertyDef>
+    <PropertyDef name="url">
+      <Property/>
+      <Property name="label">超链接</Property>
+    </PropertyDef>
+  </DataType>
+</Model>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="SlEmployee" parent="global:SlEmployee">
+      <PropertyDef name="employeeCode">
+        <Property name="label">员工编号</Property>
+      </PropertyDef>
+      <PropertyDef name="employeeName">
+        <Property name="label">姓名</Property>
+      </PropertyDef>
+      <PropertyDef name="email">
+        <Property name="label">电子邮件</Property>
+      </PropertyDef>
+      <PropertyDef name="phone">
+        <Property name="label">座机</Property>
+      </PropertyDef>
+      <PropertyDef name="mobile">
+        <Property name="label">移动电话</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="datasetEmployee">
+      <Property name="dataType">[SlEmployee]</Property>
+      <Property name="dataProvider">employeeService#getEmployeeByUserName</Property>
+      <Property name="parameter">${session.getAttribute('user').userName}</Property>
+    </DataSet>
+    <AutoForm id="autoformEmployee">
+      <Property name="dataSet">datasetEmployee</Property>
+      <Property name="labelSeparator">：</Property>
+      <Property name="width">600</Property>
+      <AutoFormElement>
+        <Property name="name">employeeName</Property>
+        <Property name="property">employeeName</Property>
+        <Property name="readOnly">true</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">employeeCode</Property>
+        <Property name="property">employeeCode</Property>
+        <Property name="readOnly">true</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">email</Property>
+        <Property name="property">email</Property>
+        <Property name="readOnly">true</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">mobile</Property>
+        <Property name="property">mobile</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">phone</Property>
+        <Property name="property">phone</Property>
+        <Property name="readOnly">true</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <UpdateAction id="updateactionSave">
+      <Property name="dataResolver">employeeService#saveAll</Property>
+      <Property name="executingMessage">正在保存...</Property>
+      <Property name="successMessage">保存成功！</Property>
+      <Property name="hotkey">ctrl+s</Property>
+      <UpdateItem>
+        <Property name="dataSet">datasetEmployee</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Container layout="hbox pack:end">
+      <Property name="height">50</Property>
+      <Property name="width">550</Property>
+      <Button id="buttonSave">
+        <Property name="caption">保存</Property>
+        <Property name="action">updateactionSave</Property>
+      </Button>
+    </Container>
+  </View>
+</ViewConfig>

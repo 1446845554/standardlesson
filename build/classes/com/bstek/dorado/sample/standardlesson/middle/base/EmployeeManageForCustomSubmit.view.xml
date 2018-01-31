@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="SlEmployee" parent="global:SlEmployee">
+      <PropertyDef name="employeeCode">
+        <Property name="label">员工编号</Property>
+        <Validator name="validator1" type="length">
+          <Property name="maxLength">6</Property>
+          <Property name="minLength">1</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="userName">
+        <Property name="label">系统Id</Property>
+        <Validator name="validator1" type="required"/>
+      </PropertyDef>
+      <PropertyDef name="employeeName">
+        <Property name="label">姓名</Property>
+        <Validator name="validator1" type="required"/>
+      </PropertyDef>
+      <PropertyDef name="email">
+        <Property name="label">电子邮件</Property>
+        <Validator name="validator1" type="regExp">
+          <Property name="whiteRegExp">\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="employeeId">
+        <Property name="label">员工ID</Property>
+        <Property name="readOnly">true</Property>
+      </PropertyDef>
+      <PropertyDef name="slDept">
+        <Property name="label">部门</Property>
+        <Property name="dataType">SlDept</Property>
+      </PropertyDef>
+      <PropertyDef name="married">
+        <Property name="label">婚否</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;marriedDropDownInterceptor#getMarriedState&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="operation">
+        <Property name="submittable">false</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="SlDept" parent="global:SlDept">
+      <Property name="defaultDisplayProperty">deptName</Property>
+      <PropertyDef name="deptId">
+        <Property name="label">部门编号</Property>
+      </PropertyDef>
+      <PropertyDef name="deptName">
+        <Property name="label">部门名称</Property>
+      </PropertyDef>
+      <Reference name="slDeptSet">
+        <Property name="dataProvider">deptService#getDeptByParentId</Property>
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">$${this.deptId}</Property>
+      </Reference>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="datasetEmployee">
+      <Property name="dataType">[SlEmployee]</Property>
+      <Property name="pageSize">15</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="dataProvider">employeeService#queryForCondition</Property>
+    </DataSet>
+    <AutoForm id="autoformCondition">
+      <Property name="cols">400,*,*</Property>
+      <Property name="createPrivateDataSet">true</Property>
+      <Property name="labelSeparator">：</Property>
+      <AutoFormElement>
+        <Property name="name">employeeName</Property>
+        <Property name="label">姓名</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">userName</Property>
+        <Property name="label">系统ID</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">employeeCode</Property>
+        <Property name="label">员工号</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement layoutConstraint="colSpan:3">
+        <Property name="label">电子邮件</Property>
+        <Property name="name">email</Property>
+        <Property name="width">400</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">phone</Property>
+        <Property name="label">座机</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="label">移动电话</Property>
+        <Property name="name">mobile</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">position</Property>
+        <Property name="label">职务</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <ToolBar>
+      <ToolBarButton id="buttonQuery">
+        <ClientEvent name="onClick" signature="self,arg,autoformCondition,datasetEmployee">//获取autoformCondition绑定的实体对象&#xD;
+var entity = autoformCondition.get(&quot;entity&quot;);&#xD;
+//将实体对象作为参数传入，并异步刷新&#xD;
+datasetEmployee.set(&quot;parameter&quot;,entity).flushAsync();</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+      <DataPilot id="datapilotEmployee">
+        <Property name="dataSet">datasetEmployee</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <ToolBarButton id="buttonAdd">
+        <ClientEvent name="onClick" signature="self,arg,datasetEmployee,dialogEdit">datasetEmployee.insert();&#xD;
+dialogEdit.show();&#xD;
+</ClientEvent>
+        <Property name="caption">新增</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="buttonEdit">
+        <ClientEvent name="onClick" signature="self,arg,dialogEdit">dialogEdit.show();</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
+        <Property name="caption">修改</Property>
+      </ToolBarButton>
+      <ToolBarButton id="buttonDel">
+        <ClientEvent name="onClick" signature="self,arg,datasetEmployee,updateactionSave">var entity = datasetEmployee.get(&quot;data:#&quot;);&#xD;
+if(entity){&#xD;
+    dorado.MessageBox.confirm(&quot;确认要删除记录吗？&quot;, function(){&#xD;
+        entity.remove();&#xD;
+        updateactionSave.execute();&#xD;
+    })&#xD;
+}</ClientEvent>
+        <Property name="caption">删除并保存</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <Property name="caption">计算选中员工所属生肖</Property>
+        <Property name="action">updateactionSaveForSelect</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -20px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataGrid id="datagridEmployee">
+      <ClientEvent name="onCreate">var OperationCellRenderer = $extend(dorado.widget.grid.SubControlCellRenderer,&#xD;
+{&#xD;
+    createSubControl : function(arg) {&#xD;
+        if (arg.data.rowType)&#xD;
+            return null;&#xD;
+        //返回按钮对象并为按钮对象绑定onClick事件&#xD;
+        return new dorado.widget.Button({&#xD;
+            onClick : function(self) {&#xD;
+                //获取当前员工对象&#xD;
+                var entity = arg.data;&#xD;
+                //在点击重置按钮后，将当前员工的密码设置为123456并保存&#xD;
+                entity.set(&quot;password&quot;,&quot;123456&quot;);&#xD;
+                view.get(&quot;#updateactionSave&quot;).execute(function(){&#xD;
+                    dorado.widget.NotifyTipManager.notify(entity&#xD;
+                        .get(&quot;employeeName&quot;)+ &quot;的密码已经重置!&quot;);&#xD;
+                })&#xD;
+            }&#xD;
+        });&#xD;
+    },&#xD;
+    refreshSubControl : function(button, arg) {&#xD;
+        var password = arg.data.get(&quot;password&quot;);&#xD;
+        //设置按钮的标题，假如员工密码为默认值则按钮显示未修改密码，若员工密码已经修改则按钮显示重置密码&#xD;
+        //如果员工密码为默认则按钮不可用&#xD;
+        button.set({&#xD;
+            caption : (password != &quot;123456&quot;) ? &quot;重置密码&quot; : &quot;未修改密码&quot;,&#xD;
+            disabled : (password == &quot;123456&quot;)&#xD;
+        });&#xD;
+    }&#xD;
+});&#xD;
+self.set(&quot;#operation.renderer&quot;, new OperationCellRenderer());</ClientEvent>
+      <Property name="dataSet">datasetEmployee</Property>
+      <Property name="height">350</Property>
+      <Property name="readOnly">true</Property>
+      <Property name="dynaRowHeight">true</Property>
+      <Property name="selectionMode">multiRows</Property>
+      <RowSelectorColumn/>
+      <DataColumn>
+        <Property name="align">center</Property>
+        <Property name="width">75</Property>
+        <Property name="name">operation</Property>
+        <Property name="caption">重置密码</Property>
+        <Editor/>
+      </DataColumn>
+      <DataColumn>
+        <ClientEvent name="onRenderCell">if(arg.data.get(&quot;image&quot;)){&#xD;
+    $(arg.dom).empty().xCreate(&#xD;
+    {&#xD;
+        tagName : &quot;IMG&quot;,&#xD;
+        src : $url(&quot;>images/photo/&quot;+ arg.data.get(&quot;image&quot;)),&#xD;
+        style : &quot;width: 20px; height: 20px; margin: 2px&quot;&#xD;
+    });&#xD;
+    //初始化Tip控件，在控件中显示图片&#xD;
+    dorado.TipManager.initTip(arg.dom.parentNode, {&#xD;
+        content : {&#xD;
+            tagName : &quot;IMG&quot;,&#xD;
+            src : $url(&quot;>images/photo/&quot;+ arg.data.get(&quot;image&quot;)),&#xD;
+            style : &quot;width: 128px; height: 128px; margin: 8px&quot;&#xD;
+        },&#xD;
+        arrowDirection : &quot;top&quot;,&#xD;
+        arrowAlign : &quot;left&quot;&#xD;
+    });    &#xD;
+}</ClientEvent>
+        <Property name="name">image</Property>
+        <Property name="property">image</Property>
+        <Property name="caption">照片</Property>
+        <Property name="align">center</Property>
+        <Property name="width">100</Property>
+        <Editor/>
+      </DataColumn>
+      <DataColumn name="employeeName">
+        <Property name="property">employeeName</Property>
+      </DataColumn>
+      <DataColumn name="userName">
+        <Property name="property">userName</Property>
+      </DataColumn>
+      <DataColumn name="employeeCode">
+        <Property name="property">employeeCode</Property>
+      </DataColumn>
+      <DataColumn name="email">
+        <ClientEvent name="onRenderCell">var mail = arg.data.get(&quot;email&quot;);&#xD;
+arg.dom.innerHTML = &quot;&lt;a href='mailto:&quot;+mail+&quot;'>&quot;+mail+&quot;&lt;/a>&quot;;</ClientEvent>
+        <Property name="property">email</Property>
+        <Property name="width">200</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="name">animal</Property>
+        <Property name="property">animal</Property>
+        <Property name="align">center</Property>
+        <Editor/>
+      </DataColumn>
+      <DataColumn name="phone">
+        <Property name="property">phone</Property>
+      </DataColumn>
+      <DataColumn name="mobile">
+        <Property name="property">mobile</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="name">degree</Property>
+        <Property name="property">degree</Property>
+        <Editor/>
+      </DataColumn>
+      <DataColumn name="position">
+        <Property name="property">position</Property>
+      </DataColumn>
+    </DataGrid>
+    <UpdateAction id="updateactionSave">
+      <Property name="dataResolver">employeeService#saveAll</Property>
+      <Property name="executingMessage">正在保存...</Property>
+      <Property name="successMessage">保存成功！</Property>
+      <Property name="hotkey">ctrl+s</Property>
+      <UpdateItem>
+        <Property name="dataSet">datasetEmployee</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Dialog id="dialogEdit">
+      <Property name="caption">员工详情</Property>
+      <Property name="width">650</Property>
+      <Property name="height">500</Property>
+      <Buttons>
+        <Button id="buttonSave">
+          <ClientEvent name="onClick" signature="self,arg,dialogEdit,updateactionSave">//在保存操作完成后的回调函数中将编辑弹出框隐藏&#xD;
+updateactionSave.execute(function(){&#xD;
+    dialogEdit.hide();&#xD;
+})</ClientEvent>
+          <Property name="action">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="buttonCancel">
+          <ClientEvent name="onClick" signature="self,arg,datasetEmployee,dialogEdit">datasetEmployee.get(&quot;data:#&quot;).cancel();&#xD;
+dialogEdit.hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -280px -220px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="autoformEmployeee">
+          <Property name="dataSet">datasetEmployee</Property>
+          <Property name="labelSeparator">:</Property>
+          <AutoFormElement>
+            <Property name="name">employeeId</Property>
+            <Property name="property">employeeId</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">employeeCode</Property>
+            <Property name="property">employeeCode</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">userName</Property>
+            <Property name="property">userName</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">employeeName</Property>
+            <Property name="property">employeeName</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">sex</Property>
+            <Property name="property">sex</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">birthday</Property>
+            <Property name="property">birthday</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">married</Property>
+            <Property name="property">married</Property>
+            <Property name="editorType">TextEditor</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">salary</Property>
+            <Property name="property">salary</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">degree</Property>
+            <Property name="property">degree</Property>
+            <Property name="trigger">listdropdownDegree</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">email</Property>
+            <Property name="property">email</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">web</Property>
+            <Property name="property">web</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">cmnt</Property>
+            <Property name="property">cmnt</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">image</Property>
+            <Property name="property">image</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">password</Property>
+            <Property name="property">password</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">animal</Property>
+            <Property name="property">animal</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">phone</Property>
+            <Property name="property">phone</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">mobile</Property>
+            <Property name="property">mobile</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">position</Property>
+            <Property name="property">position</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">slDept</Property>
+            <Property name="trigger">customDropDownCommonDept</Property>
+            <Property name="editable">false</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <ListDropDown id="listdropdownDegree">
+      <Property name="items">中专,大专,本科,硕士,博士</Property>
+    </ListDropDown>
+    <Import src="com.bstek.dorado.sample.standardlesson.middle.common.CommonDropDown#dropdownDept"/>
+    <UpdateAction id="updateactionSaveForSelect">
+      <ClientEvent name="onGetUpdateData">function getAnimal(year) {&#xD;
+    if (year=='' || year==undefined){&#xD;
+            return;&#xD;
+    }&#xD;
+    var s = Math.abs((year-1900)%12);&#xD;
+    switch(s){&#xD;
+            case 0: animal = '鼠';break;&#xD;
+            case 1: animal = '牛';break;&#xD;
+            case 2: animal = '虎';break;&#xD;
+            case 3: animal = '兔';break;&#xD;
+            case 4: animal = '龙';break;&#xD;
+            case 5: animal = '蛇';break;&#xD;
+            case 6: animal = '马';break;&#xD;
+            case 7: animal = '羊';break;&#xD;
+            case 8: animal = '猴';break;&#xD;
+            case 9: animal = '鸡';break;&#xD;
+            case 10: animal = '狗';break;&#xD;
+            case 11: animal = '猪';break;&#xD;
+            default: return;&#xD;
+    }&#xD;
+    return animal;&#xD;
+}&#xD;
+var entityList = view.get(&quot;#datagridEmployee.selection&quot;);&#xD;
+entityList.each(function(entity){&#xD;
+    var birthday = entity.get(&quot;birthday&quot;);&#xD;
+    var year= new Date(birthday).formatDate(&quot;Y&quot;);&#xD;
+    entity.set(&quot;animal&quot;,getAnimal(year));&#xD;
+});&#xD;
+arg.data = entityList;</ClientEvent>
+      <Property name="dataResolver">employeeService#saveAll</Property>
+      <Property name="executingMessage">正在保存...</Property>
+      <Property name="successMessage">保存成功！</Property>
+      <UpdateItem>
+        <Property name="dataSet">datasetEmployee</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

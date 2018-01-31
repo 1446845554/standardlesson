@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <DataSet id="datasetCompany">
+      <Property name="dataType">[SlCompany]</Property>
+      <Property name="dataProvider">companyService#getCompany</Property>
+    </DataSet>
+    <AutoForm id="autoformCompany">
+      <Property name="dataSet">datasetCompany</Property>
+      <Property name="cols">*</Property>
+      <Property name="width">450</Property>
+      <Property name="labelSeparator">：</Property>
+      <Property name="readOnly">true</Property>
+      <AutoFormElement>
+        <Property name="name">companyName</Property>
+        <Property name="property">companyName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">fullName</Property>
+        <Property name="property">fullName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">web</Property>
+        <Property name="property">web</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">address</Property>
+        <Property name="property">address</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">postcode</Property>
+        <Property name="property">postcode</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">phone</Property>
+        <Property name="property">phone</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">email</Property>
+        <Property name="property">email</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+  </View>
+</ViewConfig>

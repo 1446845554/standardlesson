@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="SlCompany" parent="global:SlCompany">
+      <PropertyDef name="companyName">
+        <Property name="label">企业简称</Property>
+        <Validator name="validator1" type="required"/>
+      </PropertyDef>
+      <PropertyDef name="fullName">
+        <Property name="label">企业全称</Property>
+        <Validator name="validator1" type="length">
+          <Property name="maxLength">50</Property>
+          <Property name="minLength">1</Property>
+        </Validator>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="datasetCompany">
+      <Property name="dataType">[SlCompany]</Property>
+      <Property name="dataProvider">companyService#getCompany</Property>
+      <Property name="readOnly">true</Property>
+    </DataSet>
+    <AutoForm id="autoformCompany">
+      <Property name="dataSet">datasetCompany</Property>
+      <Property name="cols">*</Property>
+      <Property name="labelSeparator">：</Property>
+      <Property name="width">500</Property>
+      <AutoFormElement>
+        <Property name="name">companyName</Property>
+        <Property name="property">companyName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">fullName</Property>
+        <Property name="property">fullName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">web</Property>
+        <Property name="property">web</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">address</Property>
+        <Property name="property">address</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">postcode</Property>
+        <Property name="property">postcode</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">phone</Property>
+        <Property name="property">phone</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">email</Property>
+        <Property name="property">email</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <UpdateAction id="updateactionSave">
+      <Property name="dataResolver">companyService#saveCompany</Property>
+      <Property name="executingMessage">正在保存...</Property>
+      <Property name="successMessage">保存成功！</Property>
+      <Property name="hotkey">ctrl+s</Property>
+      <UpdateItem>
+        <Property name="dataSet">datasetCompany</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Container layout="hbox pack:end">
+      <Property name="width">500</Property>
+      <Property name="height">50</Property>
+      <Button id="buttonEdit">
+        <ClientEvent name="onClick" signature="self,arg,datasetCompany">datasetCompany.set(&quot;readOnly&quot;,false);&#xD;
+</ClientEvent>
+        <Property name="caption">编辑</Property>
+      </Button>
+      <Button id="buttonSave">
+        <Property name="caption">保存</Property>
+        <Property name="action">updateactionSave</Property>
+        <Property name="tip">使用Ctrl+s快捷键保存</Property>
+      </Button>
+    </Container>
+  </View>
+</ViewConfig>

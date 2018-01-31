@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <Label id="labelWelcome" layoutConstraint="padding:10">
+      <Property name="text">欢迎使用Dorado7实战必修课“企业通讯录”初级教程</Property>
+    </Label>
+    <Button id="buttonWelcome" layoutConstraint="padding:10">
+      <ClientEvent name="onClick">dorado.MessageBox.alert(&quot;Hello World!&quot;);&#xD;
+</ClientEvent>
+      <Property name="caption">HelloWorld</Property>
+    </Button>
+  </View>
+</ViewConfig>

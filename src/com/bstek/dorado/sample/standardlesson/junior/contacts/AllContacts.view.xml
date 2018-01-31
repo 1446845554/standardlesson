@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <DataSet id="datasetEmployee">
+      <Property name="dataType">[SlEmployee]</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="dataProvider">employeeService#getAllForFilter</Property>
+      <Property name="pageSize">15</Property>
+    </DataSet>
+    <DataPilot id="datapilotEmployee">
+      <Property name="dataSet">datasetEmployee</Property>
+      <Property name="itemCodes">pages,pageSize</Property>
+    </DataPilot>
+    <DataGrid id="datagridEmployee">
+      <Property name="dataSet">datasetEmployee</Property>
+      <Property name="showFilterBar">true</Property>
+      <Property name="filterMode">serverSide</Property>
+      <DataColumn name="employeeName">
+        <Property name="property">employeeName</Property>
+      </DataColumn>
+      <DataColumn name="employeeCode">
+        <Property name="property">employeeCode</Property>
+      </DataColumn>
+      <DataColumn name="userName">
+        <Property name="property">userName</Property>
+      </DataColumn>
+      <DataColumn name="email">
+        <Property name="property">email</Property>
+      </DataColumn>
+      <DataColumn name="phone">
+        <Property name="property">phone</Property>
+      </DataColumn>
+      <DataColumn name="mobile">
+        <Property name="property">mobile</Property>
+      </DataColumn>
+      <DataColumn name="position">
+        <Property name="property">position</Property>
+      </DataColumn>
+    </DataGrid>
+  </View>
+</ViewConfig>

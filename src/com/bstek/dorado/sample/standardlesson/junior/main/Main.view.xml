@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <Label layoutConstraint="padding:5">
+      <Property name="text">	Dorado7实战必修课“企业通讯录”初级教程</Property>
+      <Property name="height">40</Property>
+      <Property name="style">
+        <Property name="font-size">24px</Property>
+      </Property>
+    </Label>
+    <ToolBar>
+      <ClientEvent name="onReady">//找到tags为logout的控件集合，为控件添加onClick事件监听器即点击后，弹出对话框&#xD;
+view.get(&quot;^logout&quot;).addListener(&quot;onClick&quot;, function(self, arg, dialogLogout){&#xD;
+    dialogLogout.show();&#xD;
+});</ClientEvent>
+      <MenuButton>
+        <Property name="caption">系统</Property>
+        <MenuItem>
+          <ClientEvent name="onClick" signature="self,arg,iframeMain">iframeMain.set(&quot;path&quot;,&quot;com.bstek.dorado.sample.standardlesson.junior.system.Welcome.d&quot;);</ClientEvent>
+          <Property name="caption">欢迎</Property>
+        </MenuItem>
+        <MenuItem>
+          <ClientEvent name="onClick" signature="self,arg,iframeMain">iframeMain.set(&quot;path&quot;,&quot;com.bstek.dorado.sample.standardlesson.junior.system.SystemInfo.d&quot;);</ClientEvent>
+          <Property name="caption">系统信息</Property>
+        </MenuItem>
+        <MenuItem>
+          <ClientEvent name="onClick" signature="self,arg,iframeMain">iframeMain.set(&quot;path&quot;,&quot;http://wiki.bsdn.org&quot;);</ClientEvent>
+          <Property name="caption">帮助</Property>
+        </MenuItem>
+        <MenuItem>
+          <ClientEvent name="onClick"/>
+          <Property name="caption">登出</Property>
+          <Property name="tags">logout</Property>
+        </MenuItem>
+      </MenuButton>
+      <MenuButton>
+        <Property name="caption">通讯录</Property>
+        <MenuItem>
+          <ClientEvent name="onClick" signature="self,arg,iframeMain">iframeMain.set(&quot;path&quot;,&quot;com.bstek.dorado.sample.standardlesson.junior.contacts.CompanyInfo.d&quot;);</ClientEvent>
+          <Property name="caption">企业联系方式</Property>
+        </MenuItem>
+        <MenuItem>
+          <ClientEvent name="onClick" signature="self,arg,iframeMain">iframeMain.set(&quot;path&quot;,&quot;com.bstek.dorado.sample.standardlesson.junior.contacts.AllContacts.d&quot;);</ClientEvent>
+          <Property name="caption">所有联系人</Property>
+        </MenuItem>
+      </MenuButton>
+      <MenuButton>
+        <Property name="caption">基础数据维护</Property>
+        <MenuItem>
+          <ClientEvent name="onClick" signature="self,arg,iframeMain">iframeMain.set(&quot;path&quot;,&quot;com.bstek.dorado.sample.standardlesson.junior.base.CompanyManage.d&quot;);</ClientEvent>
+          <Property name="caption">企业基础数据维护</Property>
+        </MenuItem>
+        <MenuItem>
+          <ClientEvent name="onClick" signature="self,arg,iframeMain">iframeMain.set(&quot;path&quot;,&quot;com.bstek.dorado.sample.standardlesson.junior.base.EmployeeManage.d&quot;);</ClientEvent>
+          <Property name="caption">员工基础数据维护</Property>
+        </MenuItem>
+      </MenuButton>
+      <Fill/>
+      <ToolBarLabel>
+        <Property name="text">欢迎您！</Property>
+      </ToolBarLabel>
+      <ToolBarButton>
+        <Property name="caption">${session.getAttribute('user').employeeName}</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -140px -100px</Property>
+      </ToolBarButton>
+      <ToolBarButton>
+        <ClientEvent name="onClick" signature="self,arg,iframeMain">iframeMain.set(&quot;path&quot;,&quot;http://wiki.bsdn.org&quot;);</ClientEvent>
+        <Property name="caption">帮助</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -180px -0px</Property>
+      </ToolBarButton>
+      <ToolBarButton>
+        <Property name="caption">登出</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+        <Property name="tags">logout</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <IFrame id="iframeMain"/>
+    <Dialog id="dialogLogout">
+      <Property name="caption">系统登出</Property>
+      <Property name="width">400</Property>
+      <Buttons>
+        <Button id="buttonConfirm">
+          <Property name="caption">确认登出</Property>
+          <Property name="action">ajaxactionLogout</Property>
+        </Button>
+        <Button id="buttonCancel">
+          <ClientEvent name="onClick" signature="self,arg,dialogLogout">dialogLogout.hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <Label>
+          <Property name="text">Dorado7实战必修课“企业通讯录”初级教程</Property>
+          <Property name="style">
+            <Property name="font-size">18px</Property>
+            <Property name="text-align">center</Property>
+          </Property>
+        </Label>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <AjaxAction id="ajaxactionLogout">
+      <ClientEvent name="onSuccess">//获取返回值&#xD;
+var result = self.get(&quot;returnValue&quot;);&#xD;
+//根据返回值中的结果跳转页面，否则提示异常&#xD;
+if(result.result){&#xD;
+    location.href=result.url;&#xD;
+}else{&#xD;
+    dorado.MessageBox.alert(&quot;登出异常！&quot;,{title:&quot;提示&quot;,icon:&quot;WARNING&quot;});&#xD;
+}</ClientEvent>
+      <Property name="service">loginService#doLogout</Property>
+    </AjaxAction>
+  </View>
+</ViewConfig>

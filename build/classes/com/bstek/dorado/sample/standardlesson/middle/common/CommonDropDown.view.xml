@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="SlDept" parent="global:SlDept">
+      <Property name="defaultDisplayProperty">deptName</Property>
+      <PropertyDef name="deptId">
+        <Property name="label">部门编号</Property>
+      </PropertyDef>
+      <PropertyDef name="deptName">
+        <Property name="label">部门名称</Property>
+      </PropertyDef>
+      <Reference name="slDeptSet">
+        <Property name="dataProvider">deptService#getDeptByParentId</Property>
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">$${this.deptId}</Property>
+      </Reference>
+    </DataType>
+  </Model>
+  <View>
+    <GroupStart id="dropdownDept"/>
+    <DataSet id="datasetDept">
+      <Property name="dataType">[SlDept]</Property>
+      <Property name="dataProvider">deptService#getTopDept</Property>
+    </DataSet>
+    <CustomDropDown id="customDropDownCommonDept">
+      <Property name="width">400</Property>
+      <Property name="height">300</Property>
+      <DataTree id="datatreeDept">
+        <ClientEvent name="onDataRowClick">var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
+var node = self.get(&quot;currentNode&quot;);&#xD;
+dropDown.close(node.get(&quot;data&quot;));</ClientEvent>
+        <Property name="dataSet">datasetDept</Property>
+        <BindingConfigs>
+          <BindingConfig>
+            <Property name="labelProperty">deptName</Property>
+            <Property name="name">dept</Property>
+            <Property name="childrenProperty">slDeptSet</Property>
+            <Property name="recursive">true</Property>
+          </BindingConfig>
+        </BindingConfigs>
+      </DataTree>
+    </CustomDropDown>
+    <GroupEnd/>
+  </View>
+</ViewConfig>

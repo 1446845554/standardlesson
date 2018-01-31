@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="SlMenu" parent="global:SlMenu">
+      <PropertyDef name="menuId">
+        <Property name="readOnly">true</Property>
+        <Property name="label">菜单编号</Property>
+      </PropertyDef>
+      <PropertyDef name="menuName">
+        <Property name="label">菜单名称</Property>
+      </PropertyDef>
+      <PropertyDef name="remarks">
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="icon">
+        <Property name="label">图标</Property>
+      </PropertyDef>
+      <PropertyDef name="showOrder">
+        <Property name="label">菜单顺序</Property>
+      </PropertyDef>
+      <PropertyDef name="url">
+        <Property name="label">菜单超链接</Property>
+      </PropertyDef>
+      <Reference name="slMenuSet">
+        <Property name="dataType">[SELF]</Property>
+        <Property name="dataProvider">menuService#getMenuByParentId</Property>
+        <Property name="parameter">$${this.menuId}</Property>
+      </Reference>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">view.get(&quot;^add&quot;).addListener(&quot;onClick&quot;, function(self,arg,datatreeMenu){&#xD;
+    var currentNode = datatreeMenu.get(&quot;currentNode&quot;);&#xD;
+    if (!currentNode) {&#xD;
+        throw new dorado.Exception(&quot;请先点中一个树节点！&quot;);&#xD;
+    }&#xD;
+     &#xD;
+    var currentEntity = currentNode.get(&quot;data&quot;);&#xD;
+    currentEntity.createBrother({&#xD;
+        menuName : &quot;&lt;菜单名称>&quot;&#xD;
+    });&#xD;
+});&#xD;
+view.get(&quot;^addChild&quot;).addListener(&quot;onClick&quot;, function(self,arg,datatreeMenu){&#xD;
+    var currentNode = datatreeMenu.get(&quot;currentNode&quot;);&#xD;
+    if (!currentNode) {&#xD;
+        throw new dorado.Exception(&quot;请先点中一个树节点！&quot;);&#xD;
+    }&#xD;
+     &#xD;
+    var currentEntity = currentNode.get(&quot;data&quot;);&#xD;
+    currentNode.expandAsync(function() {&#xD;
+        currentEntity.createChild(&quot;slMenuSet&quot;, {&#xD;
+            menuName : &quot;&lt;菜单名称>&quot;&#xD;
+        });&#xD;
+    });&#xD;
+});&#xD;
+view.get(&quot;^del&quot;).addListener(&quot;onClick&quot;, function(self,arg,datatreeMenu,updateactionSave){&#xD;
+    var currentEntity = datatreeMenu.get(&quot;currentEntity&quot;);&#xD;
+    if (!currentEntity) {&#xD;
+        throw new dorado.Exception(&quot;请先点中一个树节点！&quot;);&#xD;
+    }&#xD;
+    currentEntity.remove();&#xD;
+    updateactionSave.execute();&#xD;
+});</ClientEvent>
+    <DataSet id="datasetMenu">
+      <Property name="dataType">[SlMenu]</Property>
+      <Property name="dataProvider">menuService#getTopMenu</Property>
+    </DataSet>
+    <SplitPanel>
+      <Property name="position">300</Property>
+      <MainControl>
+        <Container>
+          <Container layout="hbox">
+            <Button id="buttonAdd">
+              <Property name="caption">添加同级节点</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
+              <Property name="tags">add</Property>
+            </Button>
+            <Button id="buttonAddChild">
+              <Property name="caption">添加下级节点</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
+              <Property name="tags">addChild</Property>
+            </Button>
+            <Button id="buttonDel">
+              <Property name="tags">del</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+              <Property name="caption">删除</Property>
+            </Button>
+            <Button id="buttonSave">
+              <Property name="caption">保存</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -160px -20px</Property>
+              <Property name="action">updateactionSave</Property>
+            </Button>
+          </Container>
+          <FieldSet>
+            <Property name="caption">菜单信息</Property>
+            <Property name="height">300</Property>
+            <Property name="width">500</Property>
+            <Buttons/>
+            <Children>
+              <AutoForm id="autoformMenu">
+                <Property name="dataSet">datasetMenu</Property>
+                <Property name="dataPath">!CURRENT_MENU</Property>
+                <Property name="cols">*</Property>
+                <Property name="labelSeparator">:</Property>
+                <Property name="labelWidth">100</Property>
+                <AutoFormElement>
+                  <Property name="name">menuId</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">menuName</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">icon</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">showOrder</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">url</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">remarks</Property>
+                  <Property name="editorType">TextArea</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+          </FieldSet>
+        </Container>
+      </MainControl>
+      <SideControl>
+        <DataTree id="datatreeMenu">
+          <ClientEvent name="onContextMenu" signature="self,arg,menuOper">menuOper.show({&#xD;
+     position:{&#xD;
+         left:arg.event.pageX,&#xD;
+         top:arg.event.pageY&#xD;
+     }&#xD;
+});</ClientEvent>
+          <Property name="currentNodeDataPath">CURRENT_MENU</Property>
+          <Property name="dataSet">datasetMenu</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="labelProperty">menuName</Property>
+              <Property name="recursive">true</Property>
+              <Property name="name">menu</Property>
+              <Property name="childrenProperty">slMenuSet</Property>
+            </BindingConfig>
+          </BindingConfigs>
+        </DataTree>
+      </SideControl>
+    </SplitPanel>
+    <Menu id="menuOper">
+      <MenuItem id="menuitemAdd">
+        <Property name="caption">添加同级节点</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
+        <Property name="tags">add</Property>
+      </MenuItem>
+      <MenuItem id="menuitemAddChild">
+        <Property name="tags">addChild</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
+        <Property name="caption">添加下级节点</Property>
+      </MenuItem>
+      <MenuItem id="menuitemDel">
+        <Property name="caption">删除当前节点</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+        <Property name="tags">del</Property>
+      </MenuItem>
+    </Menu>
+    <UpdateAction id="updateactionSave">
+      <Property name="dataResolver">menuService#saveAll</Property>
+      <Property name="executingMessage">正在保存...</Property>
+      <Property name="successMessage">保存成功！</Property>
+      <Property name="hotkey">ctrl+s</Property>
+      <UpdateItem>
+        <Property name="dataSet">datasetMenu</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

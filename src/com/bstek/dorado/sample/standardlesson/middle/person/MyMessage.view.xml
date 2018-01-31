@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="SlMessage" parent="global:SlMessage">
+      <PropertyDef name="receiver">
+        <Property name="label">接收者</Property>
+      </PropertyDef>
+      <PropertyDef name="receiverMail">
+        <Property name="label">接收邮箱</Property>
+        <Validator name="validator1" type="regExp">
+          <Property name="whiteRegExp">\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="sendDate">
+        <Property name="label">发送日期</Property>
+      </PropertyDef>
+      <PropertyDef name="content">
+        <Property name="label">内容</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="SlEmployee" parent="global:SlEmployee">
+      <PropertyDef name="employeeId">
+        <Property name="label">员工Id</Property>
+      </PropertyDef>
+      <PropertyDef name="employeeCode">
+        <Property name="label">员工编号</Property>
+      </PropertyDef>
+      <PropertyDef name="employeeName">
+        <Property name="label">姓名</Property>
+      </PropertyDef>
+      <PropertyDef name="email">
+        <Property name="label">电子邮件</Property>
+      </PropertyDef>
+      <PropertyDef name="phone">
+        <Property name="label">座机</Property>
+      </PropertyDef>
+      <PropertyDef name="mobile">
+        <Property name="label">移动电话</Property>
+      </PropertyDef>
+      <Reference name="slMessageSet">
+        <Property name="dataType">[SlMessage]</Property>
+        <Property name="dataProvider">messageService#getMessageByEmployeeId</Property>
+        <Property name="parameter">$${this.employeeId}</Property>
+        <Property name="pageSize">15</Property>
+      </Reference>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="datasetEmployee">
+      <Property name="dataType">[SlEmployee]</Property>
+      <Property name="dataProvider">employeeService#getEmployeeByUserName</Property>
+      <Property name="parameter">${session.getAttribute('user').userName}</Property>
+    </DataSet>
+    <AutoForm id="autoformEmployee">
+      <Property name="dataSet">datasetEmployee</Property>
+      <Property name="width">600</Property>
+      <Property name="labelSeparator">：</Property>
+      <Property name="readOnly">true</Property>
+      <AutoFormElement>
+        <Property name="name">employeeName</Property>
+        <Property name="property">employeeName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">employeeCode</Property>
+        <Property name="property">employeeCode</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">email</Property>
+        <Property name="property">email</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">mobile</Property>
+        <Property name="property">mobile</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">phone</Property>
+        <Property name="property">phone</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <ToolBar>
+      <DataPilot id="datapilotMessage">
+        <Property name="dataSet">datasetEmployee</Property>
+        <Property name="dataPath">#.slMessageSet</Property>
+        <Property name="itemCodes">+,-,x,|</Property>
+      </DataPilot>
+      <Button id="buttonSave">
+        <Property name="caption">保存</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -160px -20px</Property>
+        <Property name="action">updateactionSave</Property>
+      </Button>
+    </ToolBar>
+    <DataGrid id="datagridMessage">
+      <Property name="dataSet">datasetEmployee</Property>
+      <Property name="dataPath">#.slMessageSet</Property>
+      <Property name="height">400</Property>
+      <DataColumn name="receiver">
+        <Property name="property">receiver</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="receiverMail">
+        <Property name="property">receiverMail</Property>
+        <Property name="width">150</Property>
+      </DataColumn>
+      <DataColumn name="sendDate">
+        <Property name="property">sendDate</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="content">
+        <Property name="property">content</Property>
+        <Property name="editorType">TextArea</Property>
+      </DataColumn>
+    </DataGrid>
+    <UpdateAction id="updateactionSave">
+      <Property name="dataResolver">messageService#saveMessages</Property>
+      <Property name="hotkey">ctrl+s</Property>
+      <Property name="executingMessage">正在保存...</Property>
+      <Property name="successMessage">保存成功！</Property>
+      <UpdateItem>
+        <Property name="dataSet">datasetEmployee</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

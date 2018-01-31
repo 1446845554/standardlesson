@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="PassWord">
+      <PropertyDef name="password1">
+        <Property name="label">请输入新密码</Property>
+        <Validator name="validator1" type="length">
+          <Property name="maxLength">6</Property>
+          <Property name="minLength">6</Property>
+          <Property name="resultMessage">密码长度必须等于6！</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="password2">
+        <Property name="label">请重复密码</Property>
+        <Validator name="validator1" type="custom">
+          <ClientEvent name="onValidate">var password = arg.entity.get(&quot;password1&quot;);&#xD;
+if (password != arg.data) {&#xD;
+    throw new dorado.Exception(&quot;两次输入的口令不一致！&quot;);&#xD;
+}</ClientEvent>
+        </Validator>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <Container layout="hbox pack:start">
+      <Image>
+        <Property name="image">images/dorado7-logo.png</Property>
+        <Property name="stretchMode">fitWidth</Property>
+        <Property name="height">60</Property>
+      </Image>
+      <Label layoutConstraint="padding:5">
+        <Property name="text">Dorado7实战必修课“企业通讯录”中级教程</Property>
+        <Property name="height">40</Property>
+        <Property name="style">
+          <Property name="font-size">24px</Property>
+        </Property>
+      </Label>
+    </Container>
+    <ToolBar id="toolbarMenu" listener="spring:mainDynaView#beforeToolBarInit">
+      <ClientEvent name="onReady">//获取tags属性为menuitem的控件集合并为它们绑定onClick事件&#xD;
+view.get(&quot;^menuitem&quot;).addListener(&quot;onClick&quot;, function(self, arg){&#xD;
+    // 定义Tab变量&#xD;
+    var tab = {};&#xD;
+     &#xD;
+    // 制定当前的tab为IFrameTab&#xD;
+    tab.$type = &quot;IFrame&quot;;&#xD;
+    // 定义新Tab的标签&#xD;
+    tab.caption = self.get(&quot;caption&quot;);&#xD;
+    // 定义Tab的Path&#xD;
+    // get(&quot;userData&quot;)表示获取当前菜单的UserData属性，&#xD;
+    tab.path = self.get(&quot;userData&quot;);&#xD;
+    tab.name = self.get(&quot;caption&quot;);&#xD;
+    tab.closeable = true;&#xD;
+    tab.icon = self.get(&quot;icon&quot;);&#xD;
+     &#xD;
+    // 如果当前菜单项有指定的Path则打开新的tab&#xD;
+    if (tab.path) {&#xD;
+        with (view.get(&quot;#tabcontrolMain&quot;)) {&#xD;
+            // 根据name查找是否已经打开过当前的Tab。&#xD;
+            // 如果没有打开过，则需要添加一个新的Tab&#xD;
+            var currentTab = getTab(tab.name);&#xD;
+            if (currentTab) {&#xD;
+                tab = currentTab;&#xD;
+            } else {&#xD;
+                // 获取ID为tabcontrolMain的对象，并添加一个新的Tab&#xD;
+                tab = addTab(tab);&#xD;
+            }&#xD;
+            // 设定当前的Tab为指定的tab&#xD;
+            set(&quot;currentTab&quot;, tab);&#xD;
+        }&#xD;
+    }&#xD;
+});&#xD;
+ &#xD;
+//找到tags为logout的控件集合，为控件添加onClick事件监听器即点击后，弹出对话框&#xD;
+view.get(&quot;^logout&quot;).addListener(&quot;onClick&quot;, function(self, arg, dialogLogout){&#xD;
+    dialogLogout.show();&#xD;
+});</ClientEvent>
+      <Fill/>
+      <ToolBarLabel>
+        <Property name="text">欢迎您！</Property>
+      </ToolBarLabel>
+      <ToolBarButton>
+        <Property name="caption">${session.getAttribute('user').employeeName}</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -140px -100px</Property>
+      </ToolBarButton>
+      <ToolBarButton>
+        <ClientEvent name="onClick" signature="self,arg,dialogChangePassWord">dialogChangePassWord.show();</ClientEvent>
+        <Property name="caption">修改密码</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -180px -180px</Property>
+      </ToolBarButton>
+      <ToolBarButton>
+        <ClientEvent name="onClick" signature="self,arg,iframeMain">iframeMain.set(&quot;path&quot;,&quot;http://wiki.bsdn.org&quot;);</ClientEvent>
+        <Property name="caption">帮助</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -180px -0px</Property>
+      </ToolBarButton>
+      <ToolBarButton>
+        <Property name="caption">登出</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+        <Property name="tags">logout</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <IFrame id="iframeMain"/>
+    <Dialog id="dialogLogout">
+      <Property name="caption">系统登出</Property>
+      <Property name="width">400</Property>
+      <Buttons>
+        <Button id="buttonConfirm">
+          <Property name="caption">确认登出</Property>
+          <Property name="action">ajaxactionLogout</Property>
+        </Button>
+        <Button id="buttonCancel">
+          <ClientEvent name="onClick" signature="self,arg,dialogLogout">dialogLogout.hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <Label>
+          <Property name="text">Dorado7实战必修课“企业通讯录”中级教程</Property>
+          <Property name="style">
+            <Property name="font-size">18px</Property>
+            <Property name="text-align">center</Property>
+          </Property>
+        </Label>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <AjaxAction id="ajaxactionLogout">
+      <ClientEvent name="onSuccess">//获取返回值&#xD;
+var result = self.get(&quot;returnValue&quot;);&#xD;
+//根据返回值中的结果跳转页面，否则提示异常&#xD;
+if(result.result){&#xD;
+    location.href=result.url;&#xD;
+}else{&#xD;
+    dorado.MessageBox.alert(&quot;登出异常！&quot;,{title:&quot;提示&quot;,icon:&quot;WARNING&quot;});&#xD;
+}</ClientEvent>
+      <Property name="service">loginServiceForMiddle#doLogout</Property>
+    </AjaxAction>
+    <TabControl id="tabcontrolMain"/>
+    <AjaxAction id="ajaxactionChangePassWord">
+      <ClientEvent name="beforeExecute" signature="self,arg,autoformPassWord">&#xD;
+var entity = autoformPassWord.get(&quot;entity&quot;);&#xD;
+if (entity.get(&quot;password1&quot;) != entity.get(&quot;password2&quot;)) {&#xD;
+    arg.processDefault=false;&#xD;
+}&#xD;
+self.set(&quot;parameter&quot;,entity.get(&quot;password1&quot;));</ClientEvent>
+      <Property name="service">loginServiceForMiddle#changePassWord</Property>
+      <Property name="successMessage">修改密码成功！请重新登陆！</Property>
+    </AjaxAction>
+    <Dialog id="dialogChangePassWord">
+      <Property name="width">300</Property>
+      <Buttons>
+        <Button id="buttonSave">
+          <ClientEvent name="onClick" signature="self,arg,ajaxactionChangePassWord,dialogChangePassWord">//在保存操作完成后的回调函数中将编辑弹出框隐藏&#xD;
+ajaxactionChangePassWord.execute(function(){&#xD;
+    dialogChangePassWord.hide();&#xD;
+});</ClientEvent>
+          <Property name="caption">确定</Property>
+        </Button>
+        <Button id="buttonClear">
+          <ClientEvent name="onClick" signature="self,arg,dialogChangePassWord,autoformPassWord">autoformPassWord.get(&quot;entity&quot;).cancel();&#xD;
+dialogChangePassWord.hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="autoformPassWord">
+          <Property name="cols">*</Property>
+          <Property name="createPrivateDataSet">true</Property>
+          <Property name="labelSeparator">:</Property>
+          <Property name="labelWidth">100</Property>
+          <Property name="dataType">PassWord</Property>
+          <AutoFormElement>
+            <Property name="name">password1</Property>
+            <Property name="property">password1</Property>
+            <Property name="editorType">PasswordEditor</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">password2</Property>
+            <Property name="property">password2</Property>
+            <Property name="editorType">PasswordEditor</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

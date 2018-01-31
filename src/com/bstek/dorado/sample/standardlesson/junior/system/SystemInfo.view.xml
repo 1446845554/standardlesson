@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <Container layout="hbox">
+      <Button id="buttonGetSysInfo" layoutConstraint="padding:10">
+        <Property name="caption">获取Dorado版本信息</Property>
+        <Property name="action">ajaxactionGetSysInfo</Property>
+      </Button>
+      <Button id="buttonClear" layoutConstraint="padding:10">
+        <ClientEvent name="onClick" signature="self,arg,labelProduct,labelVendor,labelVersion,labelTime">labelProduct.set(&quot;text&quot;,&quot;产品：...&quot;);&#xD;
+labelVendor.set(&quot;text&quot;,&quot;提供商：...&quot;);&#xD;
+labelVersion.set(&quot;text&quot;,&quot;版本：...&quot;);&#xD;
+labelTime.set(&quot;text&quot;,&quot;当前系统时间：...&quot;);</ClientEvent>
+        <Property name="caption">清空</Property>
+      </Button>
+    </Container>
+    <Container layout="vbox">
+      <Label id="labelProduct" layoutConstraint="padding:10">
+        <Property name="text">产品：</Property>
+      </Label>
+      <Label id="labelVendor" layoutConstraint="padding:10">
+        <Property name="text">供应商：</Property>
+      </Label>
+      <Label id="labelVersion" layoutConstraint="padding:10">
+        <Property name="text">版本：</Property>
+      </Label>
+      <Label id="labelTime" layoutConstraint="padding:10">
+        <Property name="text">当前系统时间：</Property>
+      </Label>
+    </Container>
+    <AjaxAction id="ajaxactionGetSysInfo">
+      <ClientEvent name="onSuccess" signature="self,arg,labelProduct,labelVendor,labelVersion,labelTime">var info = self.get(&quot;returnValue&quot;);&#xD;
+//需要js执行停止处&#xD;
+debugger;&#xD;
+labelProduct.set(&quot;text&quot;,&quot;产品：&quot;+info.product);&#xD;
+labelVendor.set(&quot;text&quot;,&quot;提供商：&quot;+info.vendor);&#xD;
+labelVersion.set(&quot;text&quot;,&quot;版本：&quot;+info.version);&#xD;
+labelTime.set(&quot;text&quot;,&quot;当前系统时间：&quot;+info.time);</ClientEvent>
+      <Property name="service">systemInfoService#getSystemInfo</Property>
+      <Property name="executingMessage">正在获取Dorado版本信息...</Property>
+      <Property name="successMessage">获取Dorado版本信息成功！</Property>
+    </AjaxAction>
+  </View>
+</ViewConfig>

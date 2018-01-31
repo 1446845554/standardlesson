@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <Dialog id="dialogLogin" layout="vbox align:center">
+      <Property name="caption">系统登录</Property>
+      <Property name="width">450</Property>
+      <Property name="height">250</Property>
+      <Property name="closeable">false</Property>
+      <Property name="visible">true</Property>
+      <Property name="resizeable">false</Property>
+      <Buttons>
+        <Button id="buttonLogin">
+          <Property name="caption">登陆</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -100px -20px</Property>
+          <Property name="action">formSubmitActionLogin</Property>
+        </Button>
+        <Button id="buttonCancel">
+          <ClientEvent name="onClick" signature="self,arg,autoformLogin">autoformLogin.set(&quot;entity&quot;,{});</ClientEvent>
+          <Property name="caption">重置</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <Label layoutConstraint="padding:10">
+          <Property name="text">Dorado7实战必修课“企业通讯录”中级教程</Property>
+          <Property name="style">
+            <Property name="font-size">20</Property>
+            <Property name="text-align&#x9;">center</Property>
+          </Property>
+        </Label>
+        <AutoForm id="autoformLogin">
+          <Property name="cols">*</Property>
+          <Property name="createPrivateDataSet">true</Property>
+          <Property name="labelSeparator">：</Property>
+          <Property name="width">250</Property>
+          <AutoFormElement>
+            <ClientEvent name="onReady">//获取当前控件的dom对象&#xD;
+var dom = self.getDom();&#xD;
+var inputs = dom.getElementsByTagName(&quot;INPUT&quot;);&#xD;
+//获取用户名输入框&#xD;
+var inputUsername = inputs[0];&#xD;
+window.setTimeout(function(){&#xD;
+    //对其设置焦点&#xD;
+    inputUsername.focus();&#xD;
+},500);</ClientEvent>
+            <Property name="name">username</Property>
+            <Property name="label">用户名</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <ClientEvent name="onReady"></ClientEvent>
+            <ClientEvent name="onKeyDown" signature="self,arg,ajaxactionLogin">//获取按键对应的keyCode&#xD;
+var keyCode = arg.keyCode;&#xD;
+//如果是回车键则直接执行Action操作&#xD;
+if(13 == keyCode){&#xD;
+    ajaxactionLogin.execute();&#xD;
+}</ClientEvent>
+            <Property name="label">密码</Property>
+            <Property name="name">password</Property>
+            <Property name="editorType">PasswordEditor</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+        <HtmlContainer>
+          <Property name="content">&lt;div align=&quot;center&quot;>&lt;font color=&quot;red&quot;>${req[&quot;errormsg&quot;]}&lt;/font>&lt;/div></Property>
+        </HtmlContainer>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <FormSubmitAction id="formSubmitActionLogin">
+      <ClientEvent name="beforeExecute" signature="self,arg,autoformLogin">var entity = autoformLogin.get(&quot;entity&quot;);&#xD;
+var username = entity.get(&quot;username&quot;);&#xD;
+var password = entity.get(&quot;password&quot;);&#xD;
+if(username &amp;&amp; password){&#xD;
+    self.set(&quot;parameter&quot;,entity);&#xD;
+}else{&#xD;
+    dorado.MessageBox.alert(&quot;用户名密码不允许为空&quot;);&#xD;
+    arg.processDefault=false;&#xD;
+}</ClientEvent>
+      <Property name="action">>/login.do</Property>
+      <Property name="hotkey">ctrl+q</Property>
+    </FormSubmitAction>
+  </View>
+</ViewConfig>
